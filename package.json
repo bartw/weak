@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "Webpack Eslint Angular Karma",
   "scripts": {
-    "build": "",
-    "serve": "",
-    "test": ""
+    "build": "webpack",
+    "serve": "webpack-dev-server --progress -d --colors",
+    "test": "karma start karma.config.js",
+    "start": "npm run test & npm run serve"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.7.0",
-    "webpack": "^1.13.1"
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
   }
 }

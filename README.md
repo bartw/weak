@@ -334,3 +334,28 @@ Everytime you save a file the linting and testing will run again.
 ```shell
 karma start karma.config.js
 ```
+
+## Serve with webpack and consolidate
+
+Let's get rid of python's SimpleHTTPServer and also serve using webpack.
+
+```shell
+npm install webpack-dev-server --save-dev
+```
+
+In package.json create some scripts.
+
+```json
+"scripts": {
+    "build": "webpack",
+    "serve": "webpack-dev-server --progress -d --colors",
+    "test": "karma start karma.config.js",
+    "start": "npm run test & npm run serve"
+  }
+```
+
+We can now start our project with the following command. Then we can browse to http://localhost:8080/src/.
+
+```shell
+npm start
+```
