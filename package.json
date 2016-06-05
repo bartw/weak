@@ -1,0 +1,22 @@
+{
+  "name": "weak",
+  "version": "1.0.0",
+  "description": "Webpack Eslint Angular Karma",
+  "scripts": {
+    "build": "",
+    "serve": "",
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bartw/weak.git"
+  },
+  "author": "Bart Wijnants",
+  "bugs": {
+    "url": "https://github.com/bartw/weak/issues"
+  },
+  "homepage": "https://github.com/bartw/weak#readme",
+  "dependencies": {
+    "angular": "^1.5.6"
+  }
+}
