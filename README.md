@@ -4,6 +4,16 @@
 
 This is a step by step guide for creating a simple web app using Webpack, Eslint, Angular and Karma.
 
+## Quickstart
+
+If you just want to see the result, you can clone this repo and run the following scripts.
+After this you can browse to http://localhost:8080/src/ to see the app running.
+
+```shell
+npm install
+npm start
+```
+
 ## Setup
 
 Start by creating a folder for your project and initalizing a git repo, an npm package and some useful files.
@@ -204,7 +214,7 @@ We write unit tests of course.
 We will use karma and jasmine to run and write our tests.
 
 ```shell
-npm install karma karma-cli karma-jasmine karma-phantomjs-launcher karma-webpack karma-sourcemap-loader angular-mocks --save-dev
+npm install jasmine-core phantomjs-prebuilt karma karma-cli karma-jasmine karma-phantomjs-launcher karma-webpack karma-sourcemap-loader angular-mocks --save-dev
 touch karma.config.js
 touch src/tests.js
 touch src/app.spec.js
