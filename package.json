@@ -18,5 +18,8 @@
   "homepage": "https://github.com/bartw/weak#readme",
   "dependencies": {
     "angular": "^1.5.6"
+  },
+  "devDependencies": {
+    "webpack": "^1.13.1"
   }
 }

@@ -88,3 +88,52 @@ Create an empty repo on your github account and commit your changes to it.
 git remote add origin https://github.com/bartw/weak.git
 git push origin master
 ```
+
+## Webpack
+
+As our app grows we will add more js files and use more libraries. Deploying will become a big messy pile of crap.
+So let's introduce webpack to save us from all the crap.
+
+```shell
+npm install webpack --save-dev
+touch webpack.config.js
+```
+
+We start by configuring webpack in webpack.config.js
+```js
+module.exports = {
+    entry: './src/app/app.js',
+    output: {
+        filename: './src/bundle.js'
+    }
+};
+``` 
+
+Then tell webpack to use angular in our app.js
+
+```js
+require('angular');
+
+angular.module('app', [])
+```
+
+Use our newly created bundle.js in our index.html
+
+```html
+<!--replace-->
+<script type="text/javascript" src="../node_modules/angular/angular.js" charset="utf-8"></script>
+<script type="text/javascript" src="app/app.js" charset="utf-8"></script>
+<!--with-->
+<script type="text/javascript" src="bundle.js" charset="utf-8"></script>
+```
+
+Don't forget to update your .gitignore so we don't check in our bundled file.
+```
+bundle.js
+```
+
+Now we can test it out, run webpack, start a server and browse to http://localhost:8000/src/.
+```shell
+webpack
+python -m SimpleHTTPServer
+```
