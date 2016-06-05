@@ -137,3 +137,40 @@ Now we can test it out, run webpack, start a server and browse to http://localho
 webpack
 python -m SimpleHTTPServer
 ```
+
+## Components
+
+Angular 1.5 introduced components. With components you can create your own html elements.
+Let's create our own component.
+
+First update the app.js.
+```js
+require('angular');
+
+angular.module('app', [])
+    .component('helloWorld', {
+        template: '<div ng-show="$ctrl.name"><span>Hey what\'s up {{$ctrl.name}}?</span> <span>{{$ctrl.reverse()}}</div>',
+        bindings: { name: '<' },
+        controller: function() {
+            var ctrl = this;
+            
+            ctrl.reverse = function() {
+                return ctrl.name ? ctrl.name.split('').reverse().join('') : '';
+            };
+        }
+    });
+```
+
+Then index.html
+```html
+<!--replace-->
+<h1 ng-show="name">Hello {{ name }}</h1>
+<!--with-->
+<hello-world name="name"></hello-world>
+```
+
+We made our own html element! Run webpack, start a server and browse to http://localhost:8000/src/.
+```shell
+webpack
+python -m SimpleHTTPServer
+```
