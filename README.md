@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a step by step guide for creating a simple web app using Webpack Eslint Angular and Karma.
+This is a step by step guide for creating a simple web app using Webpack, Eslint, Angular and Karma.
 
 ## Setup
 
