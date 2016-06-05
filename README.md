@@ -6,7 +6,7 @@ This is a step by step guide for creating a simple web app using Webpack Eslint 
 
 ## Setup
 
-Start by creating a folder for your project and initalizing a git repo and npm package.
+Start by creating a folder for your project and initalizing a git repo, an npm package and some useful files.
 
 ```shell
 mkdir weak
@@ -33,7 +33,8 @@ git commit -m"my commit message"
 
 ## Hello from angular
 
-Now we will try and create a hello world app using angular
+Basic setup is done. We will now create a hello world app using angular.
+We will use npm to install angular and create an index.html file and a app.js file.
 
 ```shell
 npm install angular --save
@@ -43,7 +44,13 @@ mkdir src/app
 touch src/app/app.js
 ```
 
-index.html
+Copy the following to index.html.
+We include angular and our app script.
+Angular is initialized using "ng-app".
+The ng-model attribute tells angular that we want to connect the variable name with the text inside the input.
+The ng-show attribute tells angular to only display the h1 element if the name has some content.
+The value "{{ name }}" tells angular that we want the value of the variable name.
+
 ```html
 <!doctype html>
 <html>
@@ -67,12 +74,13 @@ index.html
 </html>
 ```
 
-app.js
+Our app.js can be very simple for now. It just defines a module named app.
+
 ```js
 angular.module('app', [])
 ```
 
-We can test this super simple app by starting a webserver and browsing to http://localhost:8000/src/. 
+We can test our hello world app by starting a webserver and browsing to http://localhost:8000/src/. 
 You can fill in your name and should see "Hello your name".
 
 ```shell
@@ -91,7 +99,8 @@ git push origin master
 
 ## Webpack
 
-As our app grows we will add more js files and use more libraries. Deploying will become a big messy pile of crap.
+As our app grows we will add more js files and use more libraries. 
+Maintaining the script tags in our index.html will become almost impossible.
 So let's introduce webpack to save us from all the crap.
 
 ```shell
@@ -99,7 +108,9 @@ npm install webpack --save-dev
 touch webpack.config.js
 ```
 
-We start by configuring webpack in webpack.config.js
+We start by configuring webpack in webpack.config.js.
+We tell webpack where our entry file is and where we want our bundled output to be saved.
+
 ```js
 module.exports = {
     entry: './src/app/app.js',
@@ -109,7 +120,8 @@ module.exports = {
 };
 ``` 
 
-Then tell webpack to use angular in our app.js
+Webpack wants us to require our dependencies.
+Our only dependency for now is angular.
 
 ```js
 require('angular');
@@ -117,7 +129,8 @@ require('angular');
 angular.module('app', [])
 ```
 
-Use our newly created bundle.js in our index.html
+Webpack will bundle all our js files in one file "bundle.js".
+This will make maintaining index.html a breeze.
 
 ```html
 <!--replace-->
@@ -127,12 +140,14 @@ Use our newly created bundle.js in our index.html
 <script type="text/javascript" src="bundle.js" charset="utf-8"></script>
 ```
 
-Don't forget to update your .gitignore so we don't check in our bundled file.
+Don't forget to update the .gitignore so we don't check in our bundled file.
+
 ```
 bundle.js
 ```
 
 Now we can test it out, run webpack, start a server and browse to http://localhost:8000/src/.
+
 ```shell
 webpack
 python -m SimpleHTTPServer
@@ -144,6 +159,10 @@ Angular 1.5 introduced components. With components you can create your own html 
 Let's create our own component.
 
 First update the app.js.
+In template we write the html of our component.
+Each binding is an attribute of our own component.
+The controller contains the logic of our component.
+
 ```js
 require('angular');
 
@@ -161,7 +180,8 @@ angular.module('app', [])
     });
 ```
 
-Then index.html
+Then we use our component in index.html, every capital is replaced with a dash.
+
 ```html
 <!--replace-->
 <h1 ng-show="name">Hello {{ name }}</h1>
@@ -169,7 +189,8 @@ Then index.html
 <hello-world name="name"></hello-world>
 ```
 
-We made our own html element! Run webpack, start a server and browse to http://localhost:8000/src/.
+We made our own html element! Run webpack, start a server and browse to http://localhost:8000/src/ to check it out.
+
 ```shell
 webpack
 python -m SimpleHTTPServer
@@ -189,7 +210,10 @@ touch src/tests.js
 touch src/app.spec.js
 ```
 
-karma.config.js
+Karma needs some configuration, this is stored in karma.config.js.
+We will write a file that serves as an entry file for our tests.
+We configure karma to build this using webpack and add sourcemaps to it.
+
 ```js
 module.exports = function(config) {
     config.set({
@@ -213,7 +237,9 @@ module.exports = function(config) {
 };
 ```
 
-tests.js
+Our test entry file is tests.js.
+We require angular and angular-mocks to be able to use angular with unit testing.
+Then we add all test files eg files that end in .spec.js.
 
 ```js
 require ('angular');
@@ -223,7 +249,7 @@ var testsContext = require.context('.', true, /.spec$/);
 testsContext.keys().forEach(testsContext);
 ```
 
-app.spec.js
+We create a test for our component in app.spec.js.
 
 ```js
 require('./app.js');
@@ -279,7 +305,9 @@ npm install eslint eslint-loader eslint-config-angular eslint-plugin-angular --s
 touch .eslintrc.json
 ```
 
-.eslintrc.json
+You can configure eslint yourself or extend some default rules.
+We will extend the recommended and angular rules in .eslintrc.json.
+
 ```json
 {
     "env": {
@@ -314,7 +342,8 @@ touch .eslintrc.json
 }
 ```
 
-karma.config.js
+In our karma.config.js we add a module for eslint.
+
 ```js
 webpack: {
             devtool: 'inline-source-map',
@@ -344,6 +373,11 @@ npm install webpack-dev-server --save-dev
 ```
 
 In package.json create some scripts.
+The "build" script will simply run webpack and create a bundle.js file.
+The "serve" script will start a webpack dev server so we can test our app in the browser.
+The "test" script will lint our code and run the tests.
+The "start" script will start the "test" and "serve" scripts in parrallel.
+You can start a script using "npm run script" or "npm script" for default scripts.
 
 ```json
 "scripts": {
