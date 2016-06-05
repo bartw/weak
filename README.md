@@ -174,3 +174,163 @@ We made our own html element! Run webpack, start a server and browse to http://l
 webpack
 python -m SimpleHTTPServer
 ```
+
+## Testing
+
+How can we be sure that the logic in our component does what we think it does?
+We write unit tests of course.
+
+We will use karma and jasmine to run and write our tests.
+
+```shell
+npm install karma karma-cli karma-jasmine karma-phantomjs-launcher karma-webpack karma-sourcemap-loader angular-mocks --save-dev
+touch karma.config.js
+touch src/tests.js
+touch src/app.spec.js
+```
+
+karma.config.js
+```js
+module.exports = function(config) {
+    config.set({
+        basePath: '',
+        frameworks: ['jasmine'],
+        reporters: ['progress'],
+        port: 9876,
+        colors: true,
+        logLevel: config.LOG_INFO,
+        autoWatch: true,
+        browsers: ['PhantomJS'],
+        singleRun: false,
+        autoWatchBatchDelay: 300,
+        files: ['./src/tests.js'],
+        preprocessors: { './src/tests.js': ['webpack', 'sourcemap'] },
+        webpack: {
+            devtool: 'inline-source-map',
+        },
+        webpackMiddleware: { noInfo: true }
+    });
+};
+```
+
+tests.js
+
+```js
+require ('angular');
+require ('angular-mocks');
+
+var testsContext = require.context('.', true, /.spec$/);
+testsContext.keys().forEach(testsContext);
+```
+
+app.spec.js
+
+```js
+require('./app.js');
+
+describe('app', function() {
+    beforeEach(angular.mock.module('app'));
+
+    describe('with $compile', function() {
+        var $compile, $rootScope, element, scope;
+
+        beforeEach(angular.mock.inject(function(_$compile_, _$rootScope_) {
+            $compile = _$compile_;
+            $rootScope = _$rootScope_;
+        }));
+        
+        beforeEach(function() {
+            scope = $rootScope.$new();
+            element = angular.element('<hello-world name="name"></hello-world>');
+            element = $compile(element)(scope);
+            scope.name = 'bart';
+            scope.$apply();
+        });
+
+        describe('Controller: helloWorld', function() {
+            var controller;
+            beforeEach(function() {
+                controller = element.controller('helloWorld');
+            });
+
+            it('should reverse', function() {
+                controller.name = 'bart'
+                expect(controller.reverse()).toBe('trab');
+            });
+        });
+    });
+});
+```
+
+Now we kan run our tests and watch for changes.
+
+```shell
+karma start karma.config.js
+```
+
+## Linting
+
+We always write perfect clean javascript. But what if we make a typo or just forget to use a semicolon?
+We need something to keep an eye on us.
+Say hello to Eslint.
+
+```shell
+npm install eslint eslint-loader eslint-config-angular eslint-plugin-angular --save-dev
+touch .eslintrc.json
+```
+
+.eslintrc.json
+```json
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "jasmine": true
+    },
+    "extends": ["eslint:recommended", "angular"],
+    "rules": {
+        "strict": [
+            2,
+            "global"
+        ],
+        "indent": [
+            "error",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "angular/dumb-inject": 2
+    }
+}
+```
+
+karma.config.js
+```js
+webpack: {
+            devtool: 'inline-source-map',
+            module: {                
+                loaders: [{
+                    test: /\.js$/,
+                    loader: "eslint-loader",
+                    exclude: /node_modules/
+                }]
+            }
+        },
+```
+
+Now run our tests and linting again and start fixing errors.
+Everytime you save a file the linting and testing will run again.
+
+```shell
+karma start karma.config.js
+```

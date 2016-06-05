@@ -1,0 +1,31 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "jasmine": true
+    },
+    "extends": ["eslint:recommended", "angular"],
+    "rules": {
+        "strict": [
+            2,
+            "global"
+        ],
+        "indent": [
+            "error",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "angular/dumb-inject": 2
+    }
+}
