@@ -535,3 +535,10 @@ webpack: {
 
 There seems to be a little duplication going on there.
 Maybe we can fix that later.
+
+We can now start our project with the following command. Then we can browse to http://localhost:8080/src/.
+Everything should work as before and our tests should still be green.
+
+```shell
+npm start
+```
