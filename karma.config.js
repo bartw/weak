@@ -14,12 +14,11 @@ module.exports = function(config) {
         preprocessors: { './src/tests.js': ['webpack', 'sourcemap'] },
         webpack: {
             devtool: 'inline-source-map',
-            module: {                
-                loaders: [{
-                    test: /\.js$/,
-                    loader: "eslint-loader",
-                    exclude: /node_modules/
-                }]
+            module: {
+                loaders: [
+                    { test: /\.js$/, loader: "eslint-loader", exclude: /node_modules/ },
+                    { test: /\.html$/, loader: 'raw' }
+                ]
             }
         },
         webpackMiddleware: { noInfo: true }

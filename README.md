@@ -403,3 +403,135 @@ We can now start our project with the following command. Then we can browse to h
 ```shell
 npm start
 ```
+
+## Cleaner angular
+
+As our project grows we will need more components, controllers, services and stuff.
+We can't just cram all of them in one single app.js file.
+So let's cleanup our js.
+
+We will start by creating the files and folders that we will use to organise our js files.
+We also install a raw loader that we will use to load html from an external file.
+
+```shell
+npm install raw-loader --save-dev
+mkdir src/app/components
+touch src/app/components/components.js
+mkdir src/app/components/helloworld
+touch src/app/components/helloworld/helloWorld.js
+touch src/app/components/helloworld/helloWorld.component.js
+touch src/app/components/helloworld/helloWorld.controller.js
+touch src/app/components/helloworld/helloWorld.html
+```
+
+Now let's extract our component from app.js and cut it up into small files.
+
+We will put our template in helloWorld.html.
+
+```html
+<div ng-show="$ctrl.name">
+    <span>Hey what's up {{$ctrl.name}}?</span> <span>{{$ctrl.reverse()}}</span>
+</div>
+```
+
+Our controller function belongs in helloWorld.controller.js
+
+```js
+'use strict';
+
+module.exports = function HelloWorldController() {
+    var helloWorldController = this;
+
+    helloWorldController.reverse = function() {
+        return helloWorldController.name ? helloWorldController.name.split('').reverse().join('') : '';
+    };
+};
+```
+
+In the helloWorld.component.js file we require the controller, the template and configure the rest of the component.
+
+```js
+'use strict';
+
+var controller = require('./helloWorld.controller');
+
+module.exports = {
+    template: require('./helloWorld.html'),
+    bindings: { name: '<' },
+    controller: controller
+};
+```
+
+We create a helloWorld module and add the helloWorldComponent to it in helloWorld.js
+
+```js
+'use strict';
+
+require('angular');
+
+var helloWorldComponent = require('./helloWorld.component');
+
+module.exports = angular.module('helloWorld', [])
+    .component('helloWorld', helloWorldComponent);
+```
+
+In components.js we require the helloworld module and add it to the app.components module.
+
+```js
+'use strict';
+
+require('angular');
+
+var HelloWorld = require('./helloworld/helloWorld');
+
+angular.module('app.components', [
+    HelloWorld.name
+]);
+
+module.exports = angular.module('app.components');
+```
+
+Now we can cleanup the app.js and require our components module.
+
+```js
+'use strict';
+
+require('angular');
+
+var Components = require('./components/components');
+
+angular.module('app', [ Components.name ]);
+```
+
+We still have to add the raw loader to our webpack config in webpack.config.js 
+
+```js
+module.exports = {
+    entry: './src/app/app.js',
+    output: {
+        filename: './src/bundle.js'
+    },
+    module: {
+        loaders: [
+            { test: /\.html$/, loader: 'raw' }
+        ]
+    }
+};
+```
+
+and karma.config.js.
+
+```js
+webpack: {
+            devtool: 'inline-source-map',
+            module: {
+                loaders: [
+                    { test: /\.js$/, loader: "eslint-loader", exclude: /node_modules/ },
+                    { test: /\.html$/, loader: 'raw' }
+                ]
+            }
+        },
+```
+
+There seems to be a little duplication going on there.
+Maybe we can fix that later.
