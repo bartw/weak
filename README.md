@@ -583,3 +583,5 @@ Then we have to update our test script in package.json so that it tests only onc
 
 After we commit and push to github we can go to https://travis-ci.org/ and login with github.
 Now we can enable travis for our repo. And it will start a build for our repo! 
+
+Check https://docs.travis-ci.com/user/status-images/ to learn how we can show that cool badge.
