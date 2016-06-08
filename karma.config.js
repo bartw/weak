@@ -17,7 +17,8 @@ module.exports = function(config) {
             module: {
                 loaders: [
                     { test: /\.js$/, loader: "eslint-loader", exclude: /node_modules/ },
-                    { test: /\.html$/, loader: 'raw' }
+                    { test: /\.html$/, loader: 'raw' },
+                    { test: /\.less$/, loader: "style!css!less" }
                 ]
             }
         },

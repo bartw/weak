@@ -610,3 +610,43 @@ After we commit and push to github we can go to https://travis-ci.org/ and login
 Now we can enable travis for our repo. And it will start a build for our repo! 
 
 Check https://docs.travis-ci.com/user/status-images/ to learn how we can show that cool badge.
+
+## Less
+
+We start by installing a style, css and less loader.
+And we need a less file four our hello world component.
+
+```shell
+npm install style-loader css-loader less-loader less --save-dev
+touch src/app/components/helloworld/helloWorld.less
+```
+
+In all our webpack configs, that's karma.config.js, karma.travis.config.js and webpack.config.js, we need to add a loader for the less files.
+
+```js
+{ test: /\.less$/, loader: "style!css!less" }
+```
+
+In helloWorld.js we need to require our less file.
+
+```js
+require('./helloWorld.less');
+```
+
+We'll just make some text green so helloWorld.less can be very short.
+
+```less
+.helloWorld {
+    .greenText {
+        color: green;
+    }   
+}
+```
+
+Now all that's left is helloWorld.html
+
+```html
+<div ng-show="$ctrl.name" class="helloWorld">
+    <span>Hey what's up {{$ctrl.name}}?</span> <span class="greenText">{{$ctrl.reverse()}}</span>
+</div>
+```

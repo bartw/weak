@@ -1,5 +1,6 @@
 'use strict';
 
+require('./helloWorld.less');
 require('angular');
 
 var helloWorldComponent = require('./helloWorld.component');
