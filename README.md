@@ -542,3 +542,22 @@ Everything should work as before and our tests should still be green.
 ```shell
 npm start
 ```
+
+## Automating tests with Travis CI
+
+We can automate our tests on github using Travis CI.
+
+First we create a config file and specify that we have a nodejs project and what version we use.
+
+```shell
+touch .travis.yml
+```
+
+```yml
+language: node_js
+node_js:
+  - "4.4.1"
+```
+
+We go to https://travis-ci.org/ and login with github.
+Now we can enable travis for our repo. 
