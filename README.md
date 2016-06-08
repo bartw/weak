@@ -568,6 +568,30 @@ touch karma.travis.config.js
 ```
 
 ```js
+module.exports = function(config) {
+    config.set({
+        basePath: '',
+        frameworks: ['jasmine'],
+        reporters: ['progress'],
+        port: 9876,
+        colors: true,
+        logLevel: config.LOG_INFO,
+        browsers: ['PhantomJS'],
+        singleRun: true,
+        files: ['./src/tests.js'],
+        preprocessors: { './src/tests.js': ['webpack', 'sourcemap'] },
+        webpack: {
+            devtool: 'inline-source-map',
+            module: {
+                loaders: [
+                    { test: /\.js$/, loader: "eslint-loader", exclude: /node_modules/ },
+                    { test: /\.html$/, loader: 'raw' }
+                ]
+            }
+        },
+        webpackMiddleware: { noInfo: true }
+    });
+};
 ```
 
 Then we have to update our test script in package.json so that it tests only once.
@@ -576,8 +600,9 @@ Then we have to update our test script in package.json so that it tests only onc
 "scripts": {
     "build": "webpack",
     "serve": "webpack-dev-server --progress -d --colors",
+    "testwatch": "karma start karma.config.js",
     "test": "karma start karma.travis.config.js",
-    "start": "npm run test & npm run serve"
+    "start": "npm run testwatch & npm run serve"
   },
 ```
 

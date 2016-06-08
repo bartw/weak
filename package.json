@@ -5,8 +5,9 @@
   "scripts": {
     "build": "webpack",
     "serve": "webpack-dev-server --progress -d --colors",
+    "testwatch": "karma start karma.config.js",
     "test": "karma start karma.travis.config.js",
-    "start": "npm run test & npm run serve"
+    "start": "npm run testwatch & npm run serve"
   },
   "repository": {
     "type": "git",
