@@ -559,5 +559,25 @@ node_js:
   - "4.4.1"
 ```
 
-We go to https://travis-ci.org/ and login with github.
-Now we can enable travis for our repo. 
+We create a new karma configuration file  for the travis tests.
+
+```shell
+touch karma.travis.config.js
+```
+
+```js
+```
+
+Then we have to update our test script in package.json so that it tests only once.
+
+```json
+"scripts": {
+    "build": "webpack",
+    "serve": "webpack-dev-server --progress -d --colors",
+    "test": "karma start karma.travis.config.js",
+    "start": "npm run test & npm run serve"
+  },
+```
+
+After we commit and push to github we can go to https://travis-ci.org/ and login with github.
+Now we can enable travis for our repo. And it will start a build for our repo! 
