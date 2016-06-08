@@ -650,3 +650,5 @@ Now all that's left is helloWorld.html
     <span>Hey what's up {{$ctrl.name}}?</span> <span class="greenText">{{$ctrl.reverse()}}</span>
 </div>
 ```
+
+If we start the app, our reverse name should be in green.
