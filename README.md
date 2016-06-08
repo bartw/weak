@@ -1,3 +1,5 @@
+https://travis-ci.org/bartw/weak.svg?branch=master
+
 # weak
 
 ## Introduction
