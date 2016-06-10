@@ -5,5 +5,6 @@ module.exports = {
             { test: /\.html$/, loader: 'raw' },
             { test: /\.less$/, loader: "style!css!less" }
         ]
-    }
+    },
+    plugins: []
 };

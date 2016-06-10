@@ -658,6 +658,8 @@ If we start the app, our reverse name should be in green.
 Time to clean our config files and making a release build.
 
 ```shell
+npm install html-webpack-plugin --save-dev
+mv src/index.html src/index.ejs
 rm karma.travis.config.js
 touch karma.shared.config.js
 touch karma.watch.config.js
@@ -675,31 +677,44 @@ module.exports = {
             { test: /\.html$/, loader: 'raw' },
             { test: /\.less$/, loader: "style!css!less" }
         ]
-    }
+    },
+    plugins: []
 };
 ```
 
 In webpack.debug.config.js we will load the shared config and add some extras.
+We also added the HtmlWebpackPlugin to build our own index.html from the index.ejs template.
 
 ```js
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var webpackConfig = require('./webpack.config');
 
 webpackConfig.output = {
-    filename: './src/bundle.js'
+    filename: './debug/bundle.js'
 };
 webpackConfig.devtool = 'inline-source-map';
+webpackConfig.plugins.push(new HtmlWebpackPlugin({
+    template: './src/index.ejs',
+    filename: './debug/index.html'
+}));
 
 module.exports = webpackConfig;
 ```
 
 In webpack.release.config.js we will load the shared config and add some extras.
+We also added the HtmlWebpackPlugin to build our own index.html from the index.ejs template.
 
 ```js
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var webpackConfig = require('./webpack.config');
 
 webpackConfig.output = {
     filename: './release/bundle.js'
 };
+webpackConfig.plugins.push(new HtmlWebpackPlugin({
+    template: './src/index.ejs',
+    filename: './release/index.html'
+}));
 
 module.exports = webpackConfig;
 ```
@@ -762,9 +777,55 @@ We'll reconfigure the scripts in package.json.
 "scripts": {
     "builddebug": "webpack --config webpack.debug.config.js",
     "buildrelease": "webpack -p --config webpack.release.config.js",
-    "serve": "webpack-dev-server --progress -d --colors --config webpack.debug.config.js",
+    "serve": "npm run builddebug && webpack-dev-server --progress -d --colors --config webpack.debug.config.js --content-base debug/",
     "testwatch": "karma start karma.watch.config.js",
     "test": "karma start karma.config.js",
     "start": "npm run testwatch & npm run serve"
   }
+```
+
+Now let's make the template for index.html in index.ejs
+
+```html
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>weak</title>
+</head>
+
+<body>
+    <div ng-app="app">
+        <label>Name:
+            <input type="text" ng-model="name" />
+        </label>
+        <hello-world name="name"></hello-world>
+    </div>
+</body>
+
+</html>
+```
+
+For now I won't be saving my debug or release builds so let's add the folder to our .gitignore.
+
+```
+node_modules
+bundle.js
+npm-debug.log
+debug
+release
+```
+
+We can now start our project in debug with the following command. Then we can browse to http://localhost:8080/.
+Everything should work as before and our tests should still be green.
+
+```shell
+npm start
+```
+
+To start in release mode we'll use the python server. The we can browse to http://localhost:8000/release/.
+
+```shell
+python -m SimpleHTTPServer
 ```
