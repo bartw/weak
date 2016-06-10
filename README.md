@@ -652,3 +652,119 @@ Now all that's left is helloWorld.html
 ```
 
 If we start the app, our reverse name should be in green.
+
+## Clean and release
+
+Time to clean our config files and making a release build.
+
+```shell
+rm karma.travis.config.js
+touch karma.shared.config.js
+touch karma.watch.config.js
+touch webpack.debug.config.js
+touch webpack.release.config.js
+```
+
+In webpack.config.js we will put the shared webpack config.
+
+```js
+module.exports = {
+    entry: './src/app/app.js',
+    module: {
+        loaders: [
+            { test: /\.html$/, loader: 'raw' },
+            { test: /\.less$/, loader: "style!css!less" }
+        ]
+    }
+};
+```
+
+In webpack.debug.config.js we will load the shared config and add some extras.
+
+```js
+var webpackConfig = require('./webpack.config');
+
+webpackConfig.output = {
+    filename: './src/bundle.js'
+};
+webpackConfig.devtool = 'inline-source-map';
+
+module.exports = webpackConfig;
+```
+
+In webpack.release.config.js we will load the shared config and add some extras.
+
+```js
+var webpackConfig = require('./webpack.config');
+
+webpackConfig.output = {
+    filename: './release/bundle.js'
+};
+
+module.exports = webpackConfig;
+```
+
+In karma.shared.config.js we'll load the webpack debug config and put the shared karma config.
+
+```js
+var webpackConfig = require('./webpack.debug.config');
+webpackConfig.entry = {};
+webpackConfig.module.loaders.push({ test: /\.js$/, loader: "eslint-loader", exclude: /node_modules/ });
+
+module.exports = function(config) {
+    config.set({
+        basePath: '',
+        frameworks: ['jasmine'],
+        reporters: ['progress'],
+        port: 9876,
+        colors: true,
+        logLevel: config.LOG_INFO,
+        browsers: ['PhantomJS'],
+        files: ['./src/tests.js'],
+        preprocessors: { './src/tests.js': ['webpack', 'sourcemap'] },
+        webpack: webpackConfig,
+        webpackMiddleware: { noInfo: true }
+    });
+};
+```
+
+In karma.config.js we will load the shared config and add some extras.
+
+```js
+var sharedConfig = require('./karma.shared.config');
+
+module.exports = function(config) {
+    sharedConfig(config);
+    config.set({
+        singleRun: true
+    });
+};
+```
+
+In karma.watch.config.js we will load the shared config and add some extras.
+
+```js
+var sharedConfig = require('./karma.shared.config');
+
+module.exports = function(config) {
+    sharedConfig(config);
+    config.set({
+        singleRun: false,
+        autoWatch: true,
+        autoWatchBatchDelay: 300
+    });
+};
+```
+
+We'll reconfigure the scripts in package.json.
+
+```json
+"scripts": {
+    "builddebug": "webpack --config webpack.debug.config.js",
+    "buildrelease": "webpack -p --config webpack.release.config.js",
+    "serve": "webpack-dev-server --progress -d --colors --config webpack.debug.config.js",
+    "testwatch": "karma start karma.watch.config.js",
+    "test": "karma start karma.config.js",
+    "start": "npm run testwatch & npm run serve"
+  }
+```

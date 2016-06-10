@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "Webpack Eslint Angular Karma",
   "scripts": {
-    "build": "webpack",
-    "serve": "webpack-dev-server --progress -d --colors",
-    "testwatch": "karma start karma.config.js",
-    "test": "karma start karma.travis.config.js",
+    "builddebug": "webpack --config webpack.debug.config.js",
+    "buildrelease": "webpack -p --config webpack.release.config.js",
+    "serve": "webpack-dev-server --progress -d --colors --config webpack.debug.config.js",
+    "testwatch": "karma start karma.watch.config.js",
+    "test": "karma start karma.config.js",
     "start": "npm run testwatch & npm run serve"
   },
   "repository": {

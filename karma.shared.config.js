@@ -1,3 +1,7 @@
+var webpackConfig = require('./webpack.debug.config');
+webpackConfig.entry = {};
+webpackConfig.module.loaders.push({ test: /\.js$/, loader: "eslint-loader", exclude: /node_modules/ });
+
 module.exports = function(config) {
     config.set({
         basePath: '',
@@ -7,19 +11,9 @@ module.exports = function(config) {
         colors: true,
         logLevel: config.LOG_INFO,
         browsers: ['PhantomJS'],
-        singleRun: true,
         files: ['./src/tests.js'],
         preprocessors: { './src/tests.js': ['webpack', 'sourcemap'] },
-        webpack: {
-            devtool: 'inline-source-map',
-            module: {
-                loaders: [
-                    { test: /\.js$/, loader: "eslint-loader", exclude: /node_modules/ },
-                    { test: /\.html$/, loader: 'raw' },
-                    { test: /\.less$/, loader: "style!css!less" }
-                ]
-            }
-        },
+        webpack: webpackConfig,
         webpackMiddleware: { noInfo: true }
     });
 };
